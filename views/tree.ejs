@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Árbol</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="loader" class="d-none justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100" style="z-index: 9999; background-color: rgba(0, 0, 0, 0.5);">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="https://www.monedaunica.net/wp-content/uploads/2021/10/sector-alimentario-espanol.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tree">Árbol</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12">
+              <div class="container mt-10 mb-5 d-flex justify-content-center align-items-center">
+                <div class="row justify-content-center">
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      Árbol ascendente
+                    </div>
+                    <div class="card-body">
+                      <div id="tree-ancestry-container" data-api-url="/api/tree/search/ascendancy?<%= paramUrl %>" class="mt-4">
+                        <p>El árbol ascendente se representa comenzando desde el miembro más viejo de la ascendencia</p>
+                        <ul class="list-group list-group-flush"></ul>
+                      </div>
+                    </div>
+                  </div>
+            
+                  <div class="card">
+                    <div class="card-header">
+                      Árbol descendente
+                    </div>
+                    <div class="card-body">
+                      <div id="tree-descendant-container" data-api-url="/api/tree/search/descendant?<%= paramUrl %>" class="mt-4">
+                        <p>El árbol descendente se representa comenzando desde el nodo propio y se extiende hacia sus hijos</p>
+                        <ul id="tree" class="list-group list-group-flush"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateModalLabel">Actualizar Nodo</h5>
+                    </div>
+                    <div class="modal-body">
+                      <form id="updateForm">
+                        <div class="form-group">
+                          <label for="newNodeParent">Ingrese el nuevo nodo padre (su valor):</label>
+                          <input type="text" class="form-control" id="newParentNodeValue" name="newParentNodeValue">
+                        </div>
+                        <input type="hidden" id="nodeToUpdateId" name="nodeToUpdateId">
+                      </form>
+                      <p class="small">Esto moverá el nodo seleccionado al valor del nodo que escribirás.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeUpdateModal">Cerrar</button>
+                      <button type="button" class="btn btn-primary" id="updateSubmit">Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- Agrega los scripts de Bootstrap y iziToast -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+  <script src="/assets/js/tree.js"></script>
+</body>
+</html>

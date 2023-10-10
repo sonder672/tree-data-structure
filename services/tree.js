@@ -20,12 +20,17 @@ const addNodeToTree = async (parentNodeId, parentNodeValue) => {
         return { statusCode: 404, message: 'Parent node not found', wasSuccessful: false };
     }
 
-    if (parentNode.numberChildren === 3) {
-        return { statusCode: 400, message: 'parent node value you chose already has three children', wasSuccessful: false };
+    const newNodeValue = await getNodeValueHigherThanCurrent();
+    let idCreatedNode;
+    if (parentNode.children.length < 3) {
+        idCreatedNode = await addChildToParentNode(newNodeValue, parentNode.id, parentNode.children);
+    } else {
+        idCreatedNode = await findAvailableChildAndAddNode(parentNode.children, newNodeValue);
     }
 
-    const newNodeValue = await getNodeValueHigherThanCurrent();
-    const idCreatedNode = await addChildToParentNode(newNodeValue, parentNode.id, parentNode.children);
+    if (!idCreatedNode) {
+        return { statusCode: 400, message: 'An error occurred while adding your node', wasSuccessful: false };
+    }
 
     return { 
         statusCode: 201, 
@@ -33,6 +38,30 @@ const addNodeToTree = async (parentNodeId, parentNodeValue) => {
         wasSuccessful: true, 
         idCreatedNode 
     };
+};
+
+const findAvailableChildAndAddNode = async (children, newNodeValue) => {
+    //Tiene dos ciclos para que distribuya los hijos en todo el árbol, no solo en una posición (izquierda)
+    for (const childId of children) {
+        const child = await searchNode(childId);
+
+        if (child.numberChildren < 3) {
+            const idCreatedNode = await addChildToParentNode(newNodeValue, childId, child.children);
+
+            return idCreatedNode;
+        }
+    }
+
+    for (const childId of children) {
+        const child = await searchNode(childId);
+        const idCreatedNode = await findAvailableChildAndAddNode(child.children, newNodeValue);
+        
+        if (idCreatedNode) {
+            return idCreatedNode;
+        }
+    }
+
+    return null;
 };
 
 const deleteNodeToTree = async (nodeToDeleteId, valueToDelete, ownNodeId) => {
